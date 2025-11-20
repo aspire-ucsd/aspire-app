@@ -1,0 +1,75 @@
+body {
+    margin: 0;
+    background-color: var(--bg-color);
+}
+
+:root {
+  --core-primary: #13294B;
+  --core-secondary: #00629B;
+  --accent-primary: #C69214;
+  --accent-secondary: #FFCD00;
+
+  --bg-color: white;
+  /* --bg-accent: #E9E9E9; */
+  --bg-accent: #D9D9D9;
+  --bg-contrast: rgb(111, 111, 111);
+
+
+  --text-color: black;
+  --text-color-alt: white;
+  --text-secondary: #C69214;
+  --text-muted: #858585;
+
+  --banner-bg-color: white;
+  --banner-text-color: #ffffff;
+
+  --gold-line-color: #C69214;
+
+  --border-shadow: black;
+
+  --box-shadow-light: rgba(0, 0, 0, 0.2);
+  --box-shadow-dark: rgba(0, 0, 0, 0.6);
+  --box-shadow-hover-light: rgba(0, 0, 0, 0.4);
+  --box-shadow-hover-dark: rgba(255, 255, 255, 0.4);
+
+  --llm-green: #007109;
+
+  --success-green: #018c0d;
+  --success-green-highlight: #00a60e;
+  --success-green-muted: #2f5e33;
+
+  --update-indigo: #4E3EFF;
+  --update-indigo-highlight: #9B8BFF;
+  --update-indigo-muted: #0200B3;
+
+  --danger-red: #9C0000;
+  --danger-red-highlight:rgb(204, 0, 0);
+  --danger-red-muted: #760000;
+}
+
+.no-select {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Standard */
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    transform: translateY(-100%);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+  }
+  
+.tooltip.show {
+    opacity: 1;
+  }
+  
+  

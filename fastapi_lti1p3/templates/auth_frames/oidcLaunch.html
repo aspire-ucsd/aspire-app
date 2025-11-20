@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initiated Login</title>
+    <script>
+        function redirectWithPost(url, data) {
+            // Create a form element
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
+
+            // Add hidden input fields for each data key-value pair
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key];
+                    form.appendChild(input);
+                }
+            }
+
+            // Append the form to the body
+            document.body.appendChild(form);
+
+            // Submit the form
+            form.submit();
+        }
+    
+        function setClientSession() {
+            const storageTarget = {{ storage_target| tojson }}
+            const sessionId = {{ session_id| tojson}}
+            const targetLinkURI = {{ target_link_uri | tojson }}
+
+            let platformOrigin = new URL({{ oidc_auth_domain| tojson}}).origin
+            let parent = window.parent || window.opener
+            let targetFrame = storageTarget === "_parent" ? parent : parent.frames[storageTarget];
+            const messageId = crypto.randomUUID()
+
+            targetFrame.postMessage({
+                "subject": "lti.put_data",
+                "message_id": messageId,
+                "key": "aspire_session_id",
+                "value": sessionId
+            }, platformOrigin)
+
+            window.addEventListener('message', function (event) {
+                // This isn't a message we're expecting
+                if (typeof event.data !== "object") {
+                    return;
+                }
+
+                // Validate it's the response type you expect
+                if (event.data.subject !== "lti.put_data.response") {
+                    return;
+                }
+
+                // Validate the message id matches the id you sent
+                if (event.data.message_id !== messageId) {
+                    // this is not the response you're looking for
+                    return;
+                }
+
+                // Validate that the event's origin is the same as the derived platform origin
+                if (event.origin !== platformOrigin) {
+                    return;
+                }
+
+                // handle errors
+                if (event.data.error) {
+                    // handle errors
+                    console.log(event.data.error.code)
+                    console.log(event.data.error.message)
+                    return;
+                }
+                redirectWithPost(targetLinkURI, {"session_id": sessionId})
+            })
+        }
+    </script>
+</head>
+
+<body onload="setClientSession()">
+    <p>loading</p>
+</body>
+
+</html>

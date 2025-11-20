@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated LTI Launch for Dev</title>
+</head>
+<body style="margin: 0;">
+    <script>
+        function redirectWithPost(url, data) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
+    
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key];
+                    form.appendChild(input);
+                }
+            }
+    
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+
+        function oidc_init() {
+            const token = "{{ id_token | string }}"
+            const state = "{{ state | string }}"
+            const data = {
+                id_token: token,
+                state: state
+            }
+            redirectWithPost("http://localhost:8080/aspire/oidc/response", data)
+        }
+
+        oidc_init()
+    </script>
+</body>
+</html>

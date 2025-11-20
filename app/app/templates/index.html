@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/aspire/static/favicon.ico"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"><title>vue-dev</title><script>function setClientSession() {
+        const sessionParams = {{ session_params | tojson }}
+        const contextData = {{ data | tojson }}
+
+        window.contextData = contextData
+
+        if (sessionParams) {
+          const storageTarget = contextData.storage_target
+          let platformOrigin = new URL(contextData.oidc_auth_domain).origin
+          let parent = window.parent || window.opener
+          let targetFrame = storageTarget === "_parent" ? parent : parent.frames[storageTarget];
+  
+          const sessionMessageId = crypto.randomUUID()
+          const refreshMessageId = crypto.randomUUID()
+  
+          targetFrame.postMessage({
+              "subject": "lti.put_data",
+              "message_id": sessionMessageId,
+              "key": contextData.session_storage_key,
+              "value": `${contextData.session_storage_key}|${sessionParams.session_id}|exp|${sessionParams.session_expiration}|${contextData.refresh_token_storage_key}|${sessionParams.refresh_token}`
+          }, platformOrigin)
+
+        }
+      }
+      setClientSession()</script><script defer="defer" src="/aspire/static/js/chunk-vendors.533df54e.js"></script><script defer="defer" src="/aspire/static/js/app.8f453695.js"></script><link href="/aspire/static/css/app.ad95bccb.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but vue-dev doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div></body></html>

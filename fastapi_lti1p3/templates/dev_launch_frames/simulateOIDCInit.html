@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated LTI Launch for Dev</title>
+</head>
+<body style="margin: 0;">
+    <script>
+        function redirectWithPost(url, data) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
+
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key];
+                    form.appendChild(input);
+                }
+            }
+    
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+
+        function oidc_init(event) {
+            event.preventDefault()
+            
+            var jsonReader = new FileReader
+
+            const doneReading = (params) => {
+                const data = {
+                    iss: "https://canvas.test.instructure.com",
+                    login_hint: "dev env login hint",
+                    target_link_uri: "/dev/launch",
+                    client_id: "dev",
+                    deployment_id: "dev",
+                    lti_storage_target: "cookie",
+                    params: JSON.stringify(params)
+                }
+                redirectWithPost("http://localhost:8080/aspire/oidc/init", data)
+            }
+
+            const onReaderLoad = (event) => {
+                var obj = JSON.parse(event.target.result);
+                doneReading(obj)
+            }
+
+            const jsonFile = document.getElementById("params-json")
+            if (jsonFile.files[0]) {
+                jsonReader.onload = onReaderLoad
+                jsonReader.readAsText(jsonFile.files[0])
+            }
+            else {
+                doneReading({})
+            }
+        }
+        
+        document.addEventListener("submit", event => oidc_init(event))
+
+    </script>
+    <div>
+        <form>
+            <label>ID Token Params</label>
+            <p>Input must be valid JSON</p>
+            <input id="params-json" type="file" accept=".json"/>
+            <input type="submit"/>
+        </form>
+    </div>
+</body>
+</html>

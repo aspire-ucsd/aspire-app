@@ -1,0 +1,32 @@
+FROM python:3.11-bullseye
+
+WORKDIR /app
+COPY ./app /app/app
+COPY ./requirements.txt .env* /app/
+COPY ./entrypoint.sh /app/entrypoint.sh
+COPY ./vue_dev /app/vue_dev
+
+
+RUN chmod +x ./entrypoint.sh
+# Installs node and npm for automatic vue build and mounting process
+RUN apt-get update && \
+   apt-get install -y curl && \
+  curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+  apt-get install -y nodejs && \
+  npm install -g npm@latest && \
+  npm cache clean --force
+
+# Vue build + mount executable
+ENTRYPOINT ["./entrypoint.sh"]
+
+# Install Poetry
+
+COPY ./poetry.lock ./pyproject.toml /app/
+RUN pip install poetry && poetry install --no-root --no-directory
+
+# Get configs and run poetry
+RUN poetry install --no-root --no-directory --only main
+
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0","--port","8080", "--proxy-headers", "--forwarded-allow-ips", "*"]
+
+

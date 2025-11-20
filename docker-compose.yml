@@ -1,0 +1,27 @@
+volumes:
+  domain-db:
+    external: true
+
+services:
+  aspire:
+    working_dir: /app
+    volumes:
+      - ./:/app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+
+  domain:
+    image: postgres:16.2-bullseye
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    command: postgres -c 'max_connections=1000'
+    volumes:
+      - domain-db:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+    

@@ -1,0 +1,77 @@
+nameOverride: "__APPNAME__"
+domain: "__DOMAIN__"
+hostName: "__EKSHOSTNAME__"
+appPath: "__APPNAME__"
+image:
+  repository: "__ARTIFACTORYREGISTRY__.__ARTIFACTORYBASEURL__/__ARTIFACTORYDOMAIN__/__ARTIFACTORYPROJECT__"
+  tag: "__ARTIFACTORYTAG__"
+ingress:
+  className: "__INGRESS_CLASS_NAME__"
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "__INGRESS_WHITELIST_SOURCE_RANGE__"
+deployment:
+  livenessProbe:
+    failureThreshold: 20
+    initialDelaySeconds: 60
+    periodSeconds: 5
+    successThreshold: 1
+    tcpSocket:
+      port: 8080
+  readinessProbe:
+    failureThreshold: 5
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    successThreshold: 1
+    tcpSocket:
+      port: 8080
+env:
+  normal:
+    - name: "BASE_PATH"
+      value: "/__APPNAME__"
+    - name: "ENV"
+      value: "__ENV__"
+    - name: "LOG_LEVEL"
+      value: "__LOG_LEVEL__"
+    - name: "WEB_APP_DEBUG"
+      value: "__DEBUG_FLAG__"
+    - name: "WEB_APP_VERSION"
+      value: "v1"
+    - name: "WEB_APP_TITLE"
+      value: "Canvas Tools"
+    - name: "WEB_APP_DESCRIPTION"
+      value: "Description here"
+    - name: "SSO_SP_ENTITY_ID"
+      value: "__SSO_SP_ENTITY_ID__" # https://dev-ats-pub.ucsd.edu
+    - name: "APIM_TOKEN_URL"
+      value: ""
+    - name: "APIM_BASE_URL"
+      value: ""
+    - name: "SSO_REDIS_SESSION_PREFIX"
+      value: "ati_canvas_tools"
+    - name: "DATABASE1_URL"
+      value: "__DATABASE1_URL__"
+    - name: "SESSION_ID_STORAGE_KEY"
+      value: "__SESSION_ID_STORAGE_KEY__"
+    - name: "REFRESH_TOKEN_STORAGE_KEY"
+      value: "__REFRESH_TOKEN_STORAGE_KEY__"
+    - name: "SECRET_HASH_KEY"
+      value: "__SECRET_HASH_KEY__"
+    - name: "TRITON_API_KEY"
+      value: "__TRITON_API_KEY__"
+    - name: "OPENAI_API_KEY"
+      value: "__OPENAI_API_KEY__"
+    - name: "TIMEZONE"
+      value: "__TIMEZONE__"
+  secret:
+    - name: "TEST_PASSWORD"
+      value: "__TEST_PASSWORD__"
+    - name: "APIM_CLIENT_KEY"
+      value: "emptyclientkey"
+    - name: "APIM_SECRET_KEY"
+      value: "emptysecretkey"
+    - name: "SSO_SP_CERT"
+      value: "__SSO_SP_CERT__"
+    - name: "SSO_SP_PRIVATE_KEY"
+      value: "__SSO_SP_PRIVATE_KEY__"
+    - name: "REDIS_URL"
+      value: "__REDIS_URL__" # redis://redis-session-campus.1kfkvu.0001.usw2.cache.amazonaws.com:7007

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initiated Login</title>
+    <script>
+        function redirectWithPost(url, data) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
+
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = data[key];
+                    form.appendChild(input);
+                }
+            }
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    
+        function setClientSession() {
+            const storageTarget = {{ storage_target| tojson }}
+            const sessionId = {{ session_id| tojson}}
+            const targetLinkURI = {{ target_link_uri | tojson }}
+            const oidcAuthDomain = {{ oidc_auth_domain | tojson }}
+
+            redirectWithPost(targetLinkURI, {"session_id": sessionId, "storage_target": storageTarget, "oidc_auth_domain": oidcAuthDomain})
+        }
+    </script>
+</head>
+
+<body onload="setClientSession()">
+    <p>loading</p>
+</body>
+
+</html>

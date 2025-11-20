@@ -1,0 +1,7 @@
+{
+    "https://purl.imsglobal.org/spec/lti/claim/custom": {
+        "course_id": "109",
+        "roles": "TeacherEnrollment",
+        "user_id": "108"
+        }
+}
